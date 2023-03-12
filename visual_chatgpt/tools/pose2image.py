@@ -1,18 +1,26 @@
-from PIL import Image
-from .base import BaseTool
-from ControlNet.cldm.ddim_hacked import DDIMSampler
-from ControlNet.annotator.util import HWC3, resize_image
-import torch
 import random
-import numpy as np
-import einops
-from pytorch_lightning import seed_everything
+
 import cv2
+import einops
+import numpy as np
+import torch
+from PIL import Image
+from pytorch_lightning import seed_everything
+
+from ControlNet.annotator.util import HWC3, resize_image
+from ControlNet.cldm.ddim_hacked import DDIMSampler
+
+from .base import BaseTool
+
 
 class Pose2Image(BaseTool):
     def __init__(self, device: str) -> None:
         print("Initialize the pose2image model...")
-        self.model = self.create_model("ControlNet/models/cldm_v15.yaml", device, "ControlNet/models/control_sd15_openpose.pth")
+        self.model = self.create_model(
+            "ControlNet/models/cldm_v15.yaml",
+            device,
+            "ControlNet/models/control_sd15_openpose.pth",
+        )
         self.device = device
         self.ddim_sampler = DDIMSampler(self.model)
         self.ddim_steps = 20
@@ -84,7 +92,8 @@ class Pose2Image(BaseTool):
             .clip(0, 255)
             .astype(np.uint8)
         )
-        updated_image_path = self.get_new_image_name(image_path, func_name="pose2image")
         real_image = Image.fromarray(x_samples[0])  # default the index0 image
-        real_image.save(updated_image_path)
+        updated_image_path = self.save_image(
+            real_image, image_path, func_name="pose2image"
+        )
         return updated_image_path

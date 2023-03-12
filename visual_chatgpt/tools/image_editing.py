@@ -1,15 +1,16 @@
 from diffusers import StableDiffusionInpaintPipeline
 from PIL import Image
+
 from .base import BaseTool
 from .mask_former import MaskFormer
-from visual_chatgpt.utils import get_new_image_name
+
 
 class ImageEditing(BaseTool):
     def __init__(self, device: str) -> None:
         print("Initializing StableDiffusionInpaint to %s" % device)
         self.device = device
         self.mask_former = MaskFormer(device=self.device)
-        
+
         model: StableDiffusionInpaintPipeline = StableDiffusionInpaintPipeline.from_pretrained(  # type: ignore
             "runwayml/stable-diffusion-inpainting",
         )
@@ -30,8 +31,7 @@ class ImageEditing(BaseTool):
         updated_image = self.inpainting(
             prompt=replace_with_txt, image=original_image, mask_image=mask_image
         ).images[0]
-        updated_image_path = get_new_image_name(
-            image_path, func_name="replace-something"
+        updated_image_path = self.save_image(
+            updated_image, image_path, func_name="replace-something"
         )
-        updated_image.save(updated_image_path)
         return updated_image_path

@@ -1,9 +1,11 @@
-from .base import BaseTool
-from PIL import Image
+import cv2
 import numpy as np
+from PIL import Image
+
 from ControlNet.annotator.midas import MidasDetector
 from ControlNet.annotator.util import HWC3, resize_image
-import cv2
+
+from .base import BaseTool
 
 
 class Image2Normal(BaseTool):
@@ -25,7 +27,5 @@ class Image2Normal(BaseTool):
         image = resize_image(image, self.resolution)
         H, W, C = image.shape
         detected_map = cv2.resize(detected_map, (W, H), interpolation=cv2.INTER_LINEAR)
-        updated_image_path = self.get_new_image_name(inputs, func_name="normal-map")
         image = Image.fromarray(detected_map)
-        image.save(updated_image_path)
-        return updated_image_path
+        return self.save_image(image, inputs, func_name="normal-map")

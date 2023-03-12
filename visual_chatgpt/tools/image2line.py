@@ -1,9 +1,12 @@
-from .base import BaseTool
-from PIL import Image
-import numpy as np
-from ControlNet.annotator.util import HWC3, resize_image
 import cv2
+import numpy as np
+from PIL import Image
+
 from ControlNet.annotator.mlsd import MLSDdetector
+from ControlNet.annotator.util import HWC3, resize_image
+
+from .base import BaseTool
+
 
 class Image2Line(BaseTool):
     def __init__(self) -> None:
@@ -21,10 +24,8 @@ class Image2Line(BaseTool):
         hough = self.detector(
             resize_image(image, self.resolution), self.value_thresh, self.dis_thresh
         )
-        updated_image_path = self.get_new_image_name(inputs, func_name="line-of")
         hough = 255 - cv2.dilate(
             hough, np.ones(shape=(3, 3), dtype=np.uint8), iterations=1
         )
         image = Image.fromarray(hough)
-        image.save(updated_image_path)
-        return updated_image_path
+        return self.save_image(image, inputs, func_name="line-of")

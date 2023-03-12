@@ -1,8 +1,10 @@
-from ControlNet.annotator.util import HWC3, resize_image
-from PIL import Image
-import numpy as np
-from ControlNet.annotator.hed import HEDdetector, nms
 import cv2
+import numpy as np
+from PIL import Image
+
+from ControlNet.annotator.hed import HEDdetector, nms
+from ControlNet.annotator.util import HWC3, resize_image
+
 from .base import BaseTool
 
 
@@ -27,7 +29,6 @@ class Image2Scribble(BaseTool):
         detected_map[detected_map > 4] = 255
         detected_map[detected_map < 255] = 0
         detected_map = 255 - detected_map
-        updated_image_path = self.get_new_image_name(inputs, func_name="scribble")
         image = Image.fromarray(detected_map)
-        image.save(updated_image_path)
+        updated_image_path = self.save_image(image, inputs, func_name="scribble")
         return updated_image_path

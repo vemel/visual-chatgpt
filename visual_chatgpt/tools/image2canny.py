@@ -1,8 +1,9 @@
-from .base import BaseTool
-from PIL import Image
 import numpy as np
+from PIL import Image
+
 from ControlNet.annotator.canny import CannyDetector
 
+from .base import BaseTool
 
 
 class Image2Canny(BaseTool):
@@ -18,7 +19,7 @@ class Image2Canny(BaseTool):
         image = np.array(image)
         canny = self.detector(image, self.low_thresh, self.high_thresh)
         canny = 255 - canny
-        image = Image.fromarray(canny)
-        updated_image_path = self.get_new_image_name(inputs, func_name="edge")
-        image.save(updated_image_path)
+        updated_image_path = self.save_image(
+            Image.fromarray(canny), inputs, func_name="edge"
+        )
         return updated_image_path

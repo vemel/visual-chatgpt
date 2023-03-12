@@ -1,6 +1,8 @@
-from transformers import BlipProcessor, BlipForConditionalGeneration
 from PIL import Image
+from transformers import BlipForConditionalGeneration, BlipProcessor
+
 from .base import BaseTool
+
 
 class ImageCaptioning(BaseTool):
     def __init__(self, device: str) -> None:

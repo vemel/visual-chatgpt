@@ -1,7 +1,8 @@
 import os
 import uuid
 
-def get_new_image_name(org_img_name: str, func_name: str="update") -> str:
+
+def get_new_image_name(org_img_name: str, func_name: str = "update") -> str:
     head_tail = os.path.split(org_img_name)
     head = head_tail[0]
     tail = head_tail[1]

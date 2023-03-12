@@ -1,16 +1,18 @@
-from .base import BaseTool
-from transformers import CLIPSegProcessor, CLIPSegForImageSegmentation
-from PIL import Image
-import torch
-import numpy as np
 from typing import Optional
+
+import numpy as np
+import torch
+from PIL import Image
+from transformers import CLIPSegForImageSegmentation, CLIPSegProcessor
+
+from .base import BaseTool
 
 
 class MaskFormer(BaseTool):
     def __init__(self, device: str) -> None:
         self.device = device
         self.processor = CLIPSegProcessor.from_pretrained("CIDAS/clipseg-rd64-refined")
-        model: CLIPSegForImageSegmentation = CLIPSegForImageSegmentation.from_pretrained( # type: ignore
+        model: CLIPSegForImageSegmentation = CLIPSegForImageSegmentation.from_pretrained(  # type: ignore
             "CIDAS/clipseg-rd64-refined"
         )
         self.model = model.to(device)

@@ -1,8 +1,10 @@
-from .base import BaseTool
-from PIL import Image
 import numpy as np
+from PIL import Image
+
 from ControlNet.annotator.hed import HEDdetector
 from ControlNet.annotator.util import HWC3, resize_image
+
+from .base import BaseTool
 
 
 class Image2Hed(BaseTool):
@@ -17,7 +19,5 @@ class Image2Hed(BaseTool):
         image = np.array(image)
         image = HWC3(image)
         hed = self.detector(resize_image(image, self.resolution))
-        updated_image_path = self.get_new_image_name(inputs, func_name="hed-boundary")
         image = Image.fromarray(hed)
-        image.save(updated_image_path)
-        return updated_image_path
+        return self.save_image(image, inputs, func_name="hed-boundary")

@@ -1,14 +1,15 @@
-from .base import BaseTool
-from diffusers import StableDiffusionPipeline
-from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 import torch
+from diffusers import StableDiffusionPipeline
+from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
+
+from .base import BaseTool
 
 
 class T2I(BaseTool):
     def __init__(self, device: str) -> None:
         print("Initializing T2I to %s" % device)
         self.device = device
-        self.pipe: StableDiffusionPipeline = StableDiffusionPipeline.from_pretrained( # type: ignore
+        self.pipe: StableDiffusionPipeline = StableDiffusionPipeline.from_pretrained(  # type: ignore
             "runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16
         )
         self.text_refine_tokenizer = AutoTokenizer.from_pretrained(

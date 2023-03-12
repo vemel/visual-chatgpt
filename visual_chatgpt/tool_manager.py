@@ -1,26 +1,28 @@
+import os
+
+from langchain.agents.tools import Tool
+
 from visual_chatgpt.tools.blipvqa import BLIPVQA
+from visual_chatgpt.tools.canny2image import Canny2Image
 from visual_chatgpt.tools.depth2image import Depth2Image
 from visual_chatgpt.tools.hed2image import Hed2Image
+from visual_chatgpt.tools.image2canny import Image2Canny
 from visual_chatgpt.tools.image2depth import Image2Depth
 from visual_chatgpt.tools.image2hed import Image2Hed
+from visual_chatgpt.tools.image2line import Image2Line
 from visual_chatgpt.tools.image2normal import Image2Normal
 from visual_chatgpt.tools.image2pose import Image2Pose
+from visual_chatgpt.tools.image2scribble import Image2Scribble
 from visual_chatgpt.tools.image2seg import Image2Seg
 from visual_chatgpt.tools.image_captioning import ImageCaptioning
 from visual_chatgpt.tools.image_editing import ImageEditing
 from visual_chatgpt.tools.line2image import Line2Image
 from visual_chatgpt.tools.normal2image import Normal2Image
+from visual_chatgpt.tools.pix2pix import Pix2Pix
 from visual_chatgpt.tools.pose2image import Pose2Image
 from visual_chatgpt.tools.scribble2image import Scribble2Image
 from visual_chatgpt.tools.seg2image import Seg2Image
 from visual_chatgpt.tools.t2i import T2I
-from visual_chatgpt.tools.image2canny import Image2Canny
-from visual_chatgpt.tools.image2scribble import Image2Scribble
-from visual_chatgpt.tools.canny2image import Canny2Image
-from visual_chatgpt.tools.pix2pix import Pix2Pix
-from visual_chatgpt.tools.image2line import Image2Line
-import os
-from langchain.agents.tools import Tool
 
 
 class ToolManager:

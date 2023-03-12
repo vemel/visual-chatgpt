@@ -1,20 +1,20 @@
 import os
 import sys
 
-
 sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 import os
 import re
 import uuid
 
-from visual_chatgpt.tool_manager import ToolManager
 import gradio as gr
 from dotenv import load_dotenv
 from langchain.agents.initialize import initialize_agent
 from langchain.chains.conversation.memory import ConversationBufferMemory
 from langchain.llms.openai import OpenAI
 from PIL import Image
+
+from visual_chatgpt.tool_manager import ToolManager
 
 load_dotenv()
 
@@ -151,6 +151,7 @@ class ConversationBot:
         print("Outputs:", state)
         return state, state, txt + " " + image_filename + " "
 
+
 def main() -> None:
     bot = ConversationBot()
     with gr.Blocks(css="#chatbot .overflow-y-auto{height:500px}") as demo:
@@ -174,6 +175,7 @@ def main() -> None:
         clear.click(lambda: [], None, chatbot)
         clear.click(lambda: [], None, state)
         demo.launch(server_name="0.0.0.0", server_port=7860)
+
 
 if __name__ == "__main__":
     main()

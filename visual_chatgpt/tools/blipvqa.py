@@ -1,9 +1,8 @@
-from .base import BaseTool
-from transformers import (
-    BlipForQuestionAnswering,
-    BlipProcessor
-)
 from PIL import Image
+from transformers import BlipForQuestionAnswering, BlipProcessor
+
+from .base import BaseTool
+
 
 class BLIPVQA(BaseTool):
     def __init__(self, device: str) -> None:

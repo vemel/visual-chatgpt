@@ -1,9 +1,11 @@
-from .base import BaseTool
-from PIL import Image
-import numpy as np
-from ControlNet.annotator.util import HWC3, resize_image
 import cv2
+import numpy as np
+from PIL import Image
+
 from ControlNet.annotator.openpose import OpenposeDetector
+from ControlNet.annotator.util import HWC3, resize_image
+
+from .base import BaseTool
 
 
 class Image2Pose(BaseTool):
@@ -22,7 +24,6 @@ class Image2Pose(BaseTool):
         image = resize_image(image, self.resolution)
         H, W, C = image.shape
         detected_map = cv2.resize(detected_map, (W, H), interpolation=cv2.INTER_LINEAR)
-        updated_image_path = self.get_new_image_name(inputs, func_name="human-pose")
         image = Image.fromarray(detected_map)
-        image.save(updated_image_path)
+        updated_image_path = self.save_image(image, inputs, func_name="human-pose")
         return updated_image_path
