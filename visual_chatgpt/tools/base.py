@@ -2,7 +2,7 @@ import uuid
 from pathlib import Path
 from typing import Any
 
-from ldm.util import instantiate_from_config
+from ControlNet.ldm.util import instantiate_from_config
 from omegaconf import OmegaConf
 from PIL import Image
 
