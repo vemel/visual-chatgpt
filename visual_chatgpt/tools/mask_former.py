@@ -44,4 +44,4 @@ class MaskFormer(BaseTool):
             mask_array[padded_slice] = True
         visual_mask = (mask_array * 255).astype(np.uint8)
         image_mask = Image.fromarray(visual_mask)
-        return image_mask.resize(image.size)
+        return image_mask.resize(original_image.size)
