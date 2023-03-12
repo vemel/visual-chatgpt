@@ -1,11 +1,11 @@
 import os
 import sys
+from typing import BinaryIO, Tuple
 
 sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 import os
 import re
-import uuid
 
 import gradio as gr
 from dotenv import load_dotenv
@@ -15,6 +15,8 @@ from langchain.llms.openai import OpenAI
 from PIL import Image
 
 from visual_chatgpt.tool_manager import ToolManager
+from visual_chatgpt.tools.base import BaseTool
+from visual_chatgpt.types import State
 
 load_dotenv()
 
@@ -63,7 +65,9 @@ The thoughts and observations are only visible for Visual ChatGPT, Visual ChatGP
 Thought: Do I need to use a tool? {agent_scratchpad}"""
 
 
-def cut_dialogue_history(history_memory, keep_last_n_words=500):
+def cut_dialogue_history(history_memory: str, keep_last_n_words: int = 500) -> str:
+    if len(history_memory) == 0:
+        return history_memory
     tokens = history_memory.split()
     n_tokens = len(tokens)
     print(f"hitory_memory:{history_memory}, n_tokens: {n_tokens}")
@@ -79,7 +83,7 @@ def cut_dialogue_history(history_memory, keep_last_n_words=500):
 
 
 class ConversationBot:
-    def __init__(self):
+    def __init__(self) -> None:
         print("Initializing VisualChatGPT")
         self.llm = OpenAI(temperature=0)
         self.tool_manager = ToolManager()
@@ -101,18 +105,18 @@ class ConversationBot:
             },
         )
 
-    def run_text(self, text, state):
+    def run_text(self, text: str, state: State) -> Tuple[State, State]:
         print("===============Running run_text =============")
         print("Inputs:", text, state)
         print("======>Previous memory:\n %s" % self.agent.memory)
         assert self.agent.memory is not None
         self.agent.memory.buffer = cut_dialogue_history(
-            self.agent.memory.buffer, keep_last_n_words=500
+            self.agent.memory.buffer or "", keep_last_n_words=500
         )
         res = self.agent({"input": text})
         print("======>Current memory:\n %s" % self.agent.memory)
         response = re.sub(
-            "(image/\S*png)",
+            r"(image/\S*png)",
             lambda m: f"![](/file={m.group(0)})*{m.group(0)}*",
             res["output"],
         )
@@ -120,11 +124,13 @@ class ConversationBot:
         print("Outputs:", state)
         return state, state
 
-    def run_image(self, image, state, txt):
+    def run_image(
+        self, image: BinaryIO, state: State, txt: str
+    ) -> Tuple[State, State, str]:
         print("===============Running run_image =============")
         print("Inputs:", image, state)
         print("======>Previous memory:\n %s" % self.agent.memory)
-        image_filename = os.path.join("image", str(uuid.uuid4())[0:8] + ".png")
+        image_filename = BaseTool.get_image_filename()
         print("======>Auto Resize Image...")
         img = Image.open(image.name)
         width, height = img.size
@@ -156,16 +162,16 @@ def main() -> None:
     bot = ConversationBot()
     with gr.Blocks(css="#chatbot .overflow-y-auto{height:500px}") as demo:
         chatbot = gr.Chatbot(elem_id="chatbot", label="Visual ChatGPT")
-        state = gr.State([])
+        state = gr.State([])  # type: ignore
         with gr.Row():
-            with gr.Column(scale=0.7):
+            with gr.Column(scale=70):
                 txt = gr.Textbox(
                     show_label=False,
                     placeholder="Enter text and press enter, or upload an image",
                 ).style(container=False)
-            with gr.Column(scale=0.15, min_width=0):
+            with gr.Column(scale=15, min_width=0):
                 clear = gr.Button("Clear️")
-            with gr.Column(scale=0.15, min_width=0):
+            with gr.Column(scale=15, min_width=0):
                 btn = gr.UploadButton("Upload", file_types=["image"])
 
         txt.submit(bot.run_text, [txt, state], [chatbot, state])

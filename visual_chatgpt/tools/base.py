@@ -2,20 +2,21 @@ import uuid
 from pathlib import Path
 from typing import Any
 
-from ControlNet.ldm.util import instantiate_from_config
 from omegaconf import OmegaConf
 from PIL import Image
 
 from ControlNet.cldm.model import load_state_dict
+from ControlNet.ldm.util import instantiate_from_config
 from visual_chatgpt.utils import get_new_image_name
 
 
 class BaseTool:
     IMAGE_PATH = Path.cwd() / "image"
 
-    def get_image_filename(self) -> str:
+    @classmethod
+    def get_image_filename(cls) -> str:
         filename = str(uuid.uuid4())[0:8] + ".png"
-        path = self.IMAGE_PATH / filename
+        path = cls.IMAGE_PATH / filename
         return str(path)
 
     def get_new_image_name(self, org_img_name: str, func_name: str = "update") -> str:
