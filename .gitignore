@@ -2,3 +2,6 @@
 conda.sh
 ControlNet
 .env
+visual_chatgpt/ldm
+visual_chatgpt/cldm
+visual_chatgpt/annotator

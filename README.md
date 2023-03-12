@@ -23,16 +23,13 @@ conda create -n visgpt python=3.8
 conda activate visgpt
 
 #  prepare the basic environments
-pip install -r requirement.txt
+pip install -r requirements.txt
 
 # download the visual foundation models
 bash download.sh
 
 # prepare your private openAI private key
 export OPENAI_API_KEY={Your_Private_Openai_Key}
-
-# create a folder to save images
-mkdir ./image
 
 # Start Visual ChatGPT !
 python visual_chatgpt.py

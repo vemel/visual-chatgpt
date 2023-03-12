@@ -1,3 +1,9 @@
+#!/usr/bin/env bash
+set -e
+
+ROOT_PATH=$(dirname $0)
+cd $ROOT_PATH
+
 git clone https://github.com/lllyasviel/ControlNet.git
 ln -s ControlNet/ldm ./ldm
 ln -s ControlNet/cldm ./cldm
